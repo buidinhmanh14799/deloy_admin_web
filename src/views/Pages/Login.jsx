@@ -221,7 +221,7 @@ const Login = ({ history }) => {
                 <GoogleLogin
                   clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
                   onSuccess={responseGoogle}
-                  // onFailure={responseGoogle}
+                  onFailure={responseGoogle}
                   cookiePolicy={'single_host_origin'}
                   render={(renderProps) => (
                     <button
