@@ -110,7 +110,7 @@ const Home = ({ history }) => {
           }} >
             Admin
             </Menu.Item>
-          <Menu.Item key="2" icon={<TeamOutlined />} onClick={() => {
+          <Menu.Item key="2" icon={<ProfileOutlined />} onClick={() => {
             setIndex(2);
             checkIAuth();
           }} >
