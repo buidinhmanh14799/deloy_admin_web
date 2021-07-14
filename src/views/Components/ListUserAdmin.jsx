@@ -167,7 +167,7 @@ export default function UploadData() {
         mode: 'no-cors',
         authorization: getCookie().token,
       };
-      fetch(`${process.env.REACT_APP_API_URL_HOST}/users/admin`, {
+      fetch(`${process.env.REACT_APP_API_URL}/users/admin`, {
         method: 'POST',
         headers: HEADER,
         body: JSON.stringify({
