@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
 import { authenticate, isAuth } from '../../controllers/localStorage';
 import { Link, Redirect } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { firebase } from '../../firebase/firebase-confix';
+
 // login
 const Login = ({ history }) => {
   const [formData, setFormData] = useState({
@@ -163,8 +163,10 @@ const Login = ({ history }) => {
     }
   };
 
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
+    
       {isAuth() ? <Redirect to="/" /> : null}
       <ToastContainer />
       <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">

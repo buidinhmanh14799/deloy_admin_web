@@ -6,9 +6,11 @@ import Card from "./Card/Card.jsx";
 import CardHeader from "./Card/CardHeader.jsx";
 import CardBody from "./Card/CardBody.jsx";
 import "antd/dist/antd.css";
-import { Table, Tag, Space, Button, Modal, notification } from "antd";
-import axios from 'axios';
+import { Table, Button, Modal, notification } from "antd";
 import { getCookie, signout1 } from '../../controllers/localStorage';
+import Lottie from 'react-lottie';
+
+import loading from '../../animation/loading.json';
 
 import AddAdminForm from './AddAdminForm';
 const styles = {
@@ -62,6 +64,7 @@ export default function UploadData() {
   const [modalText, setModalText] = React.useState('Bạn có chắc chắn muốn disable admin không?'); // model edit admin
   const [reload, setReload] = React.useState(true) // reload
   const [data, setData] = React.useState([]); // data
+  const [isLoad, setLoad] = React.useState(true); // data
   // input add user admin
 
   // get list admin
@@ -75,12 +78,12 @@ export default function UploadData() {
         authorization: getCookie().token,
       },
     };
-    console.log('=====>',getCookie().token);
+    console.log('=====>', getCookie().token);
     return await fetch(`${process.env.REACT_APP_API_URL}/users/admin`, HEADER)
       .then(response => response.json())
       .then(dataget => {
         console.log('sdasdasdasd--->', dataget);
-        if(dataget.status){
+        if (dataget.status) {
           let array = dataget.data.map(element => {
             return {
               id: element.id,
@@ -89,11 +92,12 @@ export default function UploadData() {
               status: element.status?.toString(),
             }
           })
+          setLoad(false);
           setData(array);
-        }else{
+        } else {
           signout1();
         }
-        
+
       });
   }
   const columns = [
@@ -156,12 +160,12 @@ export default function UploadData() {
   // add admin
   const signUp = async (values) => {
     return new Promise((resolve, reject) => {
-      const HEADER = {   
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': "*",
-          mode: 'no-cors',
-          authorization: getCookie().token,
+      const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
       };
       fetch(`${process.env.REACT_APP_API_URL_HOST}/users/admin`, {
         method: 'POST',
@@ -174,13 +178,13 @@ export default function UploadData() {
         }),
       }).then((data) => {
         resolve(data);
-      }).catch((erro)=>{reject('erro')})
+      }).catch((erro) => { reject('erro') })
     });
   }
   // api edit admin
   const editAdmin = async () => {
     let query = `${process.env.REACT_APP_API_URL}/users/admin_disable/${adminCurrent.id}`;
-    if(adminCurrent.status ==='false'){
+    if (adminCurrent.status === 'false') {
       query = `${process.env.REACT_APP_API_URL}/users/admin_enable/${adminCurrent.id}`;
     }
     return new Promise((resolve, reject) => {
@@ -213,6 +217,14 @@ export default function UploadData() {
     setVisibleEdit(false);
     setLoadingEdit(false);
   };
+  const defaultOptions = {
+    loop: true,
+    autoplay: true, 
+    animationData: loading,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
+  };
   return (
     <Card>
       <CardHeader color="primary">
@@ -232,6 +244,7 @@ export default function UploadData() {
           <AddAdminForm handleOk={handleOk} />
         </Modal>
         <Modal
+          destroyOnClose={true}
           title="Thông báo"
           visible={visibleEdit}
           onOk={handleOkEdit}
@@ -240,7 +253,9 @@ export default function UploadData() {
         >
           <p>{modalText}</p>
         </Modal>
-        <Table
+        {isLoad === true ? <Lottie options={defaultOptions}
+          height={200}
+          width={200} /> : <Table
           columns={columns}
           dataSource={data}
           onRow={(record, rowIndex) => {
@@ -256,7 +271,8 @@ export default function UploadData() {
               }, // double click row           
             };
           }}
-        />
+        />}
+
       </CardBody>
     </Card>
   );

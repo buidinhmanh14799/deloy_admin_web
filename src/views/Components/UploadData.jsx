@@ -11,10 +11,8 @@ import UploadFileView from './UploadFileView/index.jsx';
 import "antd/dist/antd.css";
 import { Table, Tag, Select, Space, Button, Modal, notification } from "antd";
 import moment from "moment";
-// import icon
-import {
-  SmileOutlined, FrownOutlined
-} from '@ant-design/icons';
+import Lottie from 'react-lottie';
+import loadingAnimation from '../../animation/loading.json';
 // api up data
 import { pushFile, removeData, updateFile } from '../../controllers/PushData';
 import { element } from "prop-types";
@@ -130,6 +128,7 @@ export default function UploadData(props) {
   const [visibleEdit, setVisibleEdit] = React.useState(false);  // load model edit
   const [visibleDelete, setVisibleDelete] = React.useState(false);  // load model edit
   // const [dataCurrent, setDataCurrent] = React.useState([]); // data current
+  const [isLoad, setLoad] = React.useState(true);
   const { Option } = Select;
   // columns
   const columns = [
@@ -200,6 +199,7 @@ export default function UploadData(props) {
           return a.IDTest - b.IDTest;
         });
         setData(array);
+        setLoad(false);
       });
   }
   // name and data post database
@@ -484,6 +484,14 @@ export default function UploadData(props) {
   useEffect(() => {
     getData();
   }, [])
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingAnimation,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
+  };
   return (
     <Card>
       <CardHeader color="primary">
@@ -504,6 +512,7 @@ export default function UploadData(props) {
       </CardHeader>
       <CardBody>
         <Modal
+          destroyOnClose={true}
           visible={isModalVisible}
           title={nameModal}
           onOk={handleOk}
@@ -527,6 +536,7 @@ export default function UploadData(props) {
           }
         </Modal>
         <Modal
+          destroyOnClose={true}
           title="Edit"
           visible={visibleEdit}
           onOk={handleOkEdit}
@@ -570,15 +580,19 @@ export default function UploadData(props) {
         >
           <p>Bạn có chắc chắn muốn xóa đề {valueUpdate.IDTest} năm {valueUpdate.IDYear} không?</p>
         </Modal>
-        <Table
+        {isLoad === true ? <Lottie options={defaultOptions}
+          height={200}
+          width={200} /> : <Table
           columns={columns}
           dataSource={data}
           onRow={(record, rowIndex) => {
             return {
-              onClick: event => { setvalueUpdate(record) },
+              onClick: event => {
+                setvalueUpdate(record)
+              },
             };
           }}
-        />
+        />}
       </CardBody>
     </Card>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GridItem from "./Grid/GridItem.jsx";
 import GridContainer from "./Grid/GridContainer.jsx";
@@ -6,9 +6,11 @@ import Table from "./Table/Table.jsx";
 import Card from "./Card/Card.jsx";
 import CardHeader from "./Card/CardHeader.jsx";
 import CardBody from "./Card/CardBody.jsx";
-import TableBody from "@material-ui/core/TableBody";
+
+import Lottie from 'react-lottie';
+import loading from '../../animation/loading.json';
 // antd library
-import { Tag, Space, Button, Modal,Empty } from "antd";
+import { Tag, Space, Button, Modal, Empty } from "antd";
 import { getCookie } from '../../controllers/localStorage';
 
 const styles = {
@@ -49,6 +51,8 @@ export default function ListUser() {
     const [data, setData] = React.useState([]);
     // input add user admin
     const [isModalVisible, setIsModalVisible] = useState(false); // set is model
+
+    const [isLoad, setLoad] = React.useState(true); // data
     // reload
     const reaLoad = () => {
         getData();
@@ -58,13 +62,13 @@ export default function ListUser() {
     const getData = async () => {
         const HEADER = {
             headers: {
-              Accept: 'application/json, text/plain, */*',
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': "*",
-              mode: 'no-cors',
-              authorization: getCookie().token,
+                Accept: 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': "*",
+                mode: 'no-cors',
+                authorization: getCookie().token,
             },
-          };
+        };
         return await fetch(`${process.env.REACT_APP_API_URL}/users/`, HEADER)
             .then(response => response.json())
             .then(data => {
@@ -79,11 +83,20 @@ export default function ListUser() {
                     }
                 })
                 setData(array);
+                setLoad(false);
             });
     }
     useEffect(() => {
         getData();
     }, [])
+    const defaultOptions = {
+        loop: true,
+        autoplay: true, 
+        animationData: loading,
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid slice'
+        }
+      };
     return (
         <GridContainer>
             <GridItem xs={12} sm={12} md={12}>
@@ -94,20 +107,23 @@ export default function ListUser() {
                                 <h4 className={classes.cardTitleWhite}>List user</h4>
                                 <p className={classes.cardCategoryWhite}>
                                     User management
-                            </p>
+                                </p>
                             </div>
                             <div style={{ flex: 1 }}>
-                            </div>                       
+                            </div>
                         </div>
                     </CardHeader>
-                    <CardBody>
-                        {data.length>0? <Table
+                    {isLoad === true ? <CardBody><Lottie options={defaultOptions}
+                        height={200}
+                        width={200} /></CardBody> : <CardBody>
+                        {data.length > 0 ? <Table
                             tableHeaderColor="primary"
                             tableHead={['id', 'name', 'email', 'disabled']}
                             tableData={data}
                             reaLoad={reaLoad}
-                        />:<Empty />}
-                    </CardBody>
+                        /> : <Empty />}
+                    </CardBody>}
+
                 </Card>
             </GridItem>
         </GridContainer>

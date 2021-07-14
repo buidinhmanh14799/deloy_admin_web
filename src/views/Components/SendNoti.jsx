@@ -239,7 +239,7 @@ export default function Notification() {
             >Send</Button>
           </div>
         </div>
-        <Modal title="Custom" visible={isModalVisible} footer={null} onCancel={handleCancel}>
+        <Modal  destroyOnClose={true} title="Custom" visible={isModalVisible} footer={null} onCancel={handleCancel}>
           <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
             <Form.Item
               name={'Title'}

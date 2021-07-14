@@ -7,18 +7,20 @@ import Card from "./Card/Card.jsx";
 import CardHeader from "./Card/CardHeader.jsx";
 import CardBody from "./Card/CardBody.jsx";
 import XLSX from 'xlsx';
-import UploadFileView from './UploadFileView/index.jsx';
+import UploadFileView from './UploadFileView/excel';
+import UploadFileViewJson from './UploadFileView/json';
 import "antd/dist/antd.css";
 import { Table, Tag, Select, Space, Button, Modal, notification, Form, Input, DatePicker } from "antd";
 import moment from "moment";
-// import icon
-import {
-  SmileOutlined, FrownOutlined
-} from '@ant-design/icons';
 // api up data
 import { pushFile, removeData, updateFile, pushOnlinePractice, removeDataOnline } from '../../controllers/PushData';
 import { element } from "prop-types";
 import { ToastContainer, toast } from 'react-toastify';
+
+import Lottie from 'react-lottie';
+import loadingAnimation from '../../animation/loading.json';
+import fs from 'fs';
+import { PanoramaFishEye } from "@material-ui/icons";
 const styles = {
   typo: {
     paddingLeft: "25%",
@@ -116,7 +118,7 @@ export default function PracticeOnline(props) {
   const classes = useStyles();
   const [loadingEdit, setLoadingEdit] = React.useState(false);
   const [loadingDelete, setLoadingDelete] = React.useState(false);
-
+  const [isModalVisibleJS, setIsModalVisibleJS] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectUpdate, setSelectUpdate] = React.useState(''); // select part current
   const [valueUpdate, setvalueUpdate] = React.useState('');
@@ -127,6 +129,7 @@ export default function PracticeOnline(props) {
   const [visibleEdit, setVisibleEdit] = React.useState(false);  // load model edit
   const [visibleDelete, setVisibleDelete] = React.useState(false);  // load model edit
   // const [dataCurrent, setDataCurrent] = React.useState([]); // data current
+  const [isLoad, setLoad] = React.useState(true);
   const { Option } = Select;
   // columns
   const columns = [
@@ -181,30 +184,31 @@ export default function PracticeOnline(props) {
     return await fetch(`${process.env.REACT_APP_API_URL}/practiceonline/list`, HEADER)
       .then(response => response.json())
       .then(data => {
-          let array = data.data?.map(element => {
-            var date = new Date(element.time);
-            var d = new Date();
-            var n = d.getTime();
-            var status = '---';
-            if (element.time > n + 7200000) {
-              status = 'comming';
-            } else if (element.time + 7200000 - n >= 0) {
-              status = 'just now';
-            } else {
-              status = 'closed';
-            }
-            return {
-              IDData: element.idData,
-              Buy: element.Buy,
-              status: status,
-              Date: date.toLocaleDateString(),
-              Title: element.title,
-            }
-          })
-          array.sort(function (a, b) {
-            return a.IDTest - b.IDTest;
-          });
-          setData(array); 
+        let array = data.data?.map(element => {
+          var date = new Date(element.time);
+          var d = new Date();
+          var n = d.getTime();
+          var status = '---';
+          if (element.time > n + 7200000) {
+            status = 'comming';
+          } else if (element.time + 7200000 - n >= 0) {
+            status = 'just now';
+          } else {
+            status = 'closed';
+          }
+          return {
+            IDData: element.idData,
+            Buy: element.Buy,
+            status: status,
+            Date: date.toLocaleDateString(),
+            Title: element.title,
+          }
+        })
+        array.sort(function (a, b) {
+          return a.IDTest - b.IDTest;
+        });
+        setData(array);
+        setLoad(false);
       });
   }
   // name and data post database
@@ -221,6 +225,7 @@ export default function PracticeOnline(props) {
     dataPart6Detail: [],
     dataPart7Detail: [],
   }
+  const dataJson = {};
 
   // convert excel to json
   const UploadFile = (e) => {
@@ -244,6 +249,7 @@ export default function PracticeOnline(props) {
       }
     });
   }
+
   // set file 
   const uploadFile = async (e, name) => {
     switch (name) {
@@ -361,6 +367,7 @@ export default function PracticeOnline(props) {
   const pushData = async () => {
     let res = [];
     await pushOnlinePractice(dataUpload).then(data => {
+      console.log(data);
       if (data.status) {
         res.push({
           content: `Add data success`,
@@ -404,6 +411,9 @@ export default function PracticeOnline(props) {
   // show add 
   const showModal = () => {
     setIsModalVisible(true);
+  };
+  const showModalJS = () => {
+    setIsModalVisibleJS(true);
   };
   const handleOk = () => {
     if (checkDataUpload) {
@@ -541,6 +551,14 @@ export default function PracticeOnline(props) {
   useEffect(() => {
     getData();
   }, [])
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingAnimation,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
+  };
   return (
     <Card>
       <CardHeader color="primary">
@@ -556,11 +574,19 @@ export default function PracticeOnline(props) {
               }} >
               +
             </Button>
+            <Button type="primary" shape="circle" onClick={
+              () => {
+                setNameModal('Add Data');
+                showModalJS();
+              }} >
+              *
+            </Button>
           </div>
         </div>
       </CardHeader>
       <CardBody>
         <Modal
+          destroyOnClose={true}
           visible={isModalVisible}
           title={nameModal}
           onOk={handleOk}
@@ -618,7 +644,6 @@ export default function PracticeOnline(props) {
         </Modal>
 
 
-
         <Modal
           title="Edit"
           visible={visibleEdit}
@@ -654,7 +679,32 @@ export default function PracticeOnline(props) {
             </div>
           </div>
         </Modal>
+
+
+
         <Modal
+          destroyOnClose={true}
+          visible={isModalVisibleJS}
+          title={nameModal}
+          onOk={handleOk}
+          onCancel={() => {
+            setIsModalVisibleJS(false)
+          }}
+          footer={[
+          ]}
+        >
+          <UploadFileViewJson
+            uploadFile={(e, name) => {
+              console.log(e);
+              // fs.readFile('file', 'utf8', function (err, data) {
+              //   if (err) throw err;
+              //   dataJson = JSON.parse(data);
+              // });
+            }} />
+
+        </Modal>
+        <Modal
+          destroyOnClose={true}
           title="Thông báo"
           visible={visibleDelete}
           onOk={handleOkDelete}
@@ -663,7 +713,9 @@ export default function PracticeOnline(props) {
         >
           <p>Bạn có chắc chắn muốn xóa đề {valueUpdate.IDData} không?</p>
         </Modal>
-        <Table
+        {isLoad === true ? <Lottie options={defaultOptions}
+          height={200}
+          width={200} /> : <Table
           columns={columns}
           dataSource={data}
           onRow={(record, rowIndex) => {
@@ -673,7 +725,8 @@ export default function PracticeOnline(props) {
               },
             };
           }}
-        />
+        />}
+
       </CardBody>
       <ToastContainer />
     </Card>
