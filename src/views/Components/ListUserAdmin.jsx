@@ -134,12 +134,12 @@ export default function UploadData() {
   const handleOk = (values) => {
     signUp(values)
       .then(data => {
-        if (data !== 'erro') {
-          openNotification('Thêm admin thành công.');
+        if (data.status === true) {
+          openNotification(data.messages);
           setReload(!reload);
         }
         else {
-          openNotification('Thêm admin thất bại!!');
+          openNotification(data.messages);
         }
       });
     setIsModalVisible(false);
@@ -176,9 +176,10 @@ export default function UploadData() {
           password: values.confirm,
           phone: values.phone
         }),
-      }).then((data) => {
-        resolve(data);
-      }).catch((erro) => { reject('erro') })
+      }).then(response => response.json())
+        .then((data) => {
+          resolve(data);
+        }).catch((erro) => { reject('erro') })
     });
   }
   // api edit admin
@@ -219,7 +220,7 @@ export default function UploadData() {
   };
   const defaultOptions = {
     loop: true,
-    autoplay: true, 
+    autoplay: true,
     animationData: loading,
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice'

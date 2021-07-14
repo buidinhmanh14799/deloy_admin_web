@@ -124,12 +124,12 @@ const Login = ({ history }) => {
             toast.success(`Welcome!! ${userCredential.user.email}`);
           }).catch(function (error) {
             console.log('error');
+            toast.success('Error! ', error.message);
           });
 
         })
         .catch((error) => {
-          var errorMessage = error.message;
-          console.log(errorMessage);
+          toast.error('Email or password is not correct');
         });
       // axios
       //   .post(`${process.env.REACT_APP_API_URL_LOGIN}/admin/login`, {
