@@ -30,6 +30,19 @@ export const pushOnlinePractice = (data) => {
         })
     });
 }
+export const pushOnlinePracticejson = (data) => {
+    // console.log("======>" + JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+        fetch(`${process.env.REACT_APP_API_URL}/practiceonline/data_json`, {
+            method: 'POST',
+            headers: HEADER,
+            body: JSON.stringify(data),
+        }).then((data) => {
+            resolve(data.json());
+        })
+    });
+}
+
 
 export const updateFile = (data, name) => {
     // console.log(data)

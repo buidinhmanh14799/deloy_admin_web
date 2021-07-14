@@ -13,7 +13,7 @@ import "antd/dist/antd.css";
 import { Table, Tag, Select, Space, Button, Modal, notification, Form, Input, DatePicker } from "antd";
 import moment from "moment";
 // api up data
-import { pushFile, removeData, updateFile, pushOnlinePractice, removeDataOnline } from '../../controllers/PushData';
+import { pushOnlinePracticejson, updateFile, pushOnlinePractice, removeDataOnline } from '../../controllers/PushData';
 import { element } from "prop-types";
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -21,6 +21,7 @@ import Lottie from 'react-lottie';
 import loadingAnimation from '../../animation/loading.json';
 import fs from 'fs';
 import { PanoramaFishEye } from "@material-ui/icons";
+import fullTest from '../../assests/full.json';
 const styles = {
   typo: {
     paddingLeft: "25%",
@@ -225,7 +226,7 @@ export default function PracticeOnline(props) {
     dataPart6Detail: [],
     dataPart7Detail: [],
   }
-  const dataJson = {};
+  let dataJson = {};
 
   // convert excel to json
   const UploadFile = (e) => {
@@ -398,6 +399,42 @@ export default function PracticeOnline(props) {
     });
     getData();
   }
+
+  const pushDataJson = async () => {
+    let res = [];
+    await pushOnlinePracticejson(dataJson).then(data => {
+      console.log(data);
+      if (data.status) {
+        res.push({
+          content: `Add data success`,
+          date: moment().format('YYYY/MM/DD'),
+          status: data.status
+        })
+      }
+      else {
+        res.push({
+          content: `Add data fail`,
+          date: moment().format('YYYY/MM/DD'),
+          status: data.status
+        })
+      }
+    });
+    // set data notification
+    setDataNotification(res);
+    setLoading(false); // set loadding
+    setIsModalVisibleJS(false);
+    toast.success('Add data success!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    getData();
+  }
+
   // notification
   const openNotification = () => {
     const args = {
@@ -424,9 +461,24 @@ export default function PracticeOnline(props) {
       openNotification();
     }
   };
+  const handleOkJson = (values) => {
+    dataJson.title = values.title;
+    dataJson.decription = values.decription;
+
+    var date = new Date(values.time);
+    dataJson.time = date.getTime();
+    console.log('oke');
+    if (checkDataUpload) {
+      setLoading(true);
+      pushDataJson();
+    }
+    else {
+      openNotification();
+    }
+  };
   const handleCancel = () => {
     if (!loading) {
-      setIsModalVisible(false);
+      setIsModalVisibleJS(false);
     }
   };
   // select file
@@ -679,28 +731,59 @@ export default function PracticeOnline(props) {
             </div>
           </div>
         </Modal>
-
-
-
         <Modal
           destroyOnClose={true}
           visible={isModalVisibleJS}
           title={nameModal}
-          onOk={handleOk}
           onCancel={() => {
             setIsModalVisibleJS(false)
           }}
           footer={[
           ]}
         >
-          <UploadFileViewJson
-            uploadFile={(e, name) => {
-              console.log(e);
-              // fs.readFile('file', 'utf8', function (err, data) {
-              //   if (err) throw err;
-              //   dataJson = JSON.parse(data);
-              // });
-            }} />
+          <Form {...layout} name="nest-messages" onFinish={handleOkJson} validateMessages={validateMessages}>
+            <Form.Item name={'title'} label="Title"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name={'decription'} label="Decription" rules={[
+              {
+                required: true,
+              },
+            ]}>
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item name={'time'} label="Time" rules={[
+              {
+                required: true,
+              },
+            ]}>
+              <DatePicker
+                format="YYYY-MM-DD HH:mm:ss"
+                // disabledDate={disabledDate}
+                // disabledTime={disabledDateTime}
+                showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+              />
+            </Form.Item>
+            <UploadFileViewJson
+              uploadFile={() => {
+                dataJson = fullTest;
+              }
+
+              } />
+
+            <Form.Item >
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+
+          </Form>
 
         </Modal>
         <Modal
