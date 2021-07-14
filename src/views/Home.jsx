@@ -134,12 +134,12 @@ const Home = ({ history }) => {
           }}>
             Send notification
             </Menu.Item>
-          <Menu.Item key="6" icon={<ProfileOutlined />} onClick={() => {
+          {/* <Menu.Item key="6" icon={<ProfileOutlined />} onClick={() => {
             setIndex(6);
             checkIAuth();
           }}>
             Profile
-            </Menu.Item>
+            </Menu.Item> */}
         </Menu>
       </Sider>
       <Layout className="site-layout">
