@@ -31,7 +31,7 @@ export const pushOnlinePractice = (data) => {
     });
 }
 export const pushOnlinePracticejson = (data) => {
-    // console.log("======>" + JSON.stringify(data));
+    console.log(HEADER);
     return new Promise((resolve, reject) => {
         fetch(`${process.env.REACT_APP_API_URL}/practiceonline/data_json`, {
             method: 'POST',
