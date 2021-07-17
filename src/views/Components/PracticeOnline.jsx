@@ -368,13 +368,22 @@ export default function PracticeOnline(props) {
   const pushData = async () => {
     let res = [];
     await pushOnlinePractice(dataUpload).then(data => {
-      console.log(data);
-      if (data.status) {
+      console.log('=======>',data);
+      if (data.status===true) {
         res.push({
           content: `Add data success`,
           date: moment().format('YYYY/MM/DD'),
           status: data.status
         })
+        toast.success('Add data success!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
       else {
         res.push({
@@ -382,21 +391,21 @@ export default function PracticeOnline(props) {
           date: moment().format('YYYY/MM/DD'),
           status: data.status
         })
+        toast.error(data.messages, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     });
     // set data notification
     setDataNotification(res);
     setLoading(false); // set loadding
     setIsModalVisible(false);
-    toast.success('Add data success!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
     getData();
   }
 
@@ -410,6 +419,15 @@ export default function PracticeOnline(props) {
           date: moment().format('YYYY/MM/DD'),
           status: data.status
         })
+        toast.success('Add data success!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
       else {
         res.push({
@@ -417,21 +435,21 @@ export default function PracticeOnline(props) {
           date: moment().format('YYYY/MM/DD'),
           status: data.status
         })
+        toast.error(data.messages, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     });
     // set data notification
     setDataNotification(res);
     setLoading(false); // set loadding
     setIsModalVisibleJS(false);
-    toast.success('Add data success!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
     getData();
   }
 
@@ -479,6 +497,7 @@ export default function PracticeOnline(props) {
   const handleCancel = () => {
     if (!loading) {
       setIsModalVisibleJS(false);
+      setIsModalVisible(false);
     }
   };
   // select file
