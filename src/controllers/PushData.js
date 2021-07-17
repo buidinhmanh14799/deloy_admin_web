@@ -1,13 +1,13 @@
 import { getCookie } from '../../src/controllers/localStorage';
-const HEADER = {
-    Accept: 'application/json, text/plain, */*',
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': "*",
-    mode: 'no-cors',
-    authorization: getCookie().token,
-}
 
 export const pushFile = (data, name) => {
+    const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
+    }
     return new Promise((resolve, reject) => {
         fetch(`${process.env.REACT_APP_API_URL}/database/${name}/add`, {
             method: 'POST',
@@ -19,6 +19,13 @@ export const pushFile = (data, name) => {
     });
 }
 export const pushOnlinePractice = (data) => {
+    const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
+    }
     // console.log("======>" + JSON.stringify(data));
     return new Promise((resolve, reject) => {
         fetch(`${process.env.REACT_APP_API_URL}/practiceonline/data`, {
@@ -31,6 +38,13 @@ export const pushOnlinePractice = (data) => {
     });
 }
 export const pushOnlinePracticejson = (data) => {
+    const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
+    }
     console.log(HEADER);
     return new Promise((resolve, reject) => {
         fetch(`${process.env.REACT_APP_API_URL}/practiceonline/data_json`, {
@@ -45,6 +59,13 @@ export const pushOnlinePracticejson = (data) => {
 
 
 export const updateFile = (data, name) => {
+    const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
+    }
     // console.log(data)
     return new Promise((resolve, reject) => {
         fetch(`${process.env.REACT_APP_API_URL}/database/${name}/update`, {
@@ -57,6 +78,13 @@ export const updateFile = (data, name) => {
     });
 }
 export const removeData = (data) => {
+    const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
+    }
     console.log(typeof data.IDTest)
     return new Promise((resolve, reject) => {
         fetch(`${process.env.REACT_APP_API_URL}/database/test/delete?IDTest=` + data.IDTest + `&IDYear=` + data.IDYear, {
@@ -74,6 +102,13 @@ export const removeData = (data) => {
 }
 
 export const removeDataOnline = (data) => {
+    const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
+    }
     console.log(typeof data.IDTest)
     return new Promise((resolve, reject) => {
         fetch(`${process.env.REACT_APP_API_URL}/practiceonline/data?IDData=` + data.IDData, {

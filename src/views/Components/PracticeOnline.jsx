@@ -404,7 +404,7 @@ export default function PracticeOnline(props) {
     let res = [];
     await pushOnlinePracticejson(dataJson).then(data => {
       console.log(data);
-      if (data.status) {
+      if (data.status===true) {
         res.push({
           content: `Add data success`,
           date: moment().format('YYYY/MM/DD'),
