@@ -14,7 +14,7 @@ export const pushFile = (data, name) => {
             headers: HEADER,
             body: data,
         }).then((data) => {
-            resolve(data.data.json());
+            resolve(data.json());
         })
     });
 }
