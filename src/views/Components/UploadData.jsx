@@ -14,7 +14,7 @@ import moment from "moment";
 import Lottie from 'react-lottie';
 import loadingAnimation from '../../animation/loading.json';
 // api up data
-import { pushFile, removeData, updateFile } from '../../controllers/PushData';
+import { pushFile, removeData, updateFile,checkTest } from '../../controllers/PushData';
 import { element } from "prop-types";
 const styles = {
   typo: {
@@ -365,29 +365,42 @@ export default function UploadData(props) {
   // push data firebase
   const pushData = async () => {
     let res = [];
-    for (const property in dataUpload) {
-      await pushFile(dataUpload[property], property)
-        .then(data => {
-          if (data.status) {
-            res.push({
-              content: `Add data ${property} success`,
-              date: moment().format('YYYY/MM/DD'),
-              status: data.status
-            })
-          }
-          else {
-            res.push({
-              content: `Add data ${property} fail`,
-              date: moment().format('YYYY/MM/DD'),
-              status: data.status
-            })
-          }
-        });
-    };
-    // set data notification
-    setDataNotification(res);
-    setLoading(false); // set loadding
-    setIsModalVisible(false);
+    await checkTest(dataUpload.test).then(data=>{
+      console.log(data);
+      if (data.status) {
+        // for (const property in dataUpload) {
+        //   await pushFile(dataUpload[property], property)
+        //     .then(data => {
+        //       if (data.status) {
+        //         res.push({
+        //           content: `Add data ${property} success`,
+        //           date: moment().format('YYYY/MM/DD'),
+        //           status: data.status
+        //         })
+        //       }
+        //       else {
+        //         res.push({
+        //           content: `Add data ${property} fail`,
+        //           date: moment().format('YYYY/MM/DD'),
+        //           status: data.status
+        //         })
+        //       }
+        //     });
+        // };
+        // // set data notification
+        // setDataNotification(res);
+        // setLoading(false); // set loadding
+        // setIsModalVisible(false);
+      } else {
+        res.push({
+          content: data.messages,
+          date: moment().format('YYYY/MM/DD'),
+          status: data.status
+        })
+        setLoading(false); // set loadding
+      }
+    })
+  
   }
   // notification
   const openNotification = () => {

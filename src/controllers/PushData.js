@@ -18,6 +18,26 @@ export const pushFile = (data, name) => {
         })
     });
 }
+export const checkTest = (data) => {
+    console.log(data);
+    const HEADER = {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': "*",
+        mode: 'no-cors',
+        authorization: getCookie().token,
+    }
+    // console.log("======>" + JSON.stringify(data));
+    return new Promise((resolve, reject) => {
+        fetch(`${process.env.REACT_APP_API_URL}/database/test/check`, {
+            method: 'POST',
+            headers: HEADER,
+            body: JSON.stringify(data),
+        }).then((data) => {
+            resolve(data.json());
+        })
+    });
+}
 export const pushOnlinePractice = (data) => {
     const HEADER = {
         Accept: 'application/json, text/plain, */*',
