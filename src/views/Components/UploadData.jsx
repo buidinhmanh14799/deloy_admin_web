@@ -365,32 +365,32 @@ export default function UploadData(props) {
   // push data firebase
   const pushData = async () => {
     let res = [];
-    await checkTest(dataUpload.test).then(data=>{
+    await checkTest(dataUpload.test).then(async(data)=>{
       console.log(data);
       if (data.status) {
-        // for (const property in dataUpload) {
-        //   await pushFile(dataUpload[property], property)
-        //     .then(data => {
-        //       if (data.status) {
-        //         res.push({
-        //           content: `Add data ${property} success`,
-        //           date: moment().format('YYYY/MM/DD'),
-        //           status: data.status
-        //         })
-        //       }
-        //       else {
-        //         res.push({
-        //           content: `Add data ${property} fail`,
-        //           date: moment().format('YYYY/MM/DD'),
-        //           status: data.status
-        //         })
-        //       }
-        //     });
-        // };
-        // // set data notification
-        // setDataNotification(res);
-        // setLoading(false); // set loadding
-        // setIsModalVisible(false);
+        for (const property in dataUpload) {
+          await pushFile(dataUpload[property], property)
+            .then(data => {
+              if (data.status) {
+                res.push({
+                  content: `Add data ${property} success`,
+                  date: moment().format('YYYY/MM/DD'),
+                  status: data.status
+                })
+              }
+              else {
+                res.push({
+                  content: `Add data ${property} fail`,
+                  date: moment().format('YYYY/MM/DD'),
+                  status: data.status
+                })
+              }
+            });
+        };
+        // set data notification
+        setDataNotification(res);
+        setLoading(false); // set loadding
+        setIsModalVisible(false);
       } else {
         res.push({
           content: data.messages,
@@ -426,9 +426,7 @@ export default function UploadData(props) {
     }
   };
   const handleCancel = () => {
-    if (!loading) {
-      setIsModalVisible(false);
-    }
+    setIsModalVisible(false);
   };
   // select file
   const selectFile = async (e, name) => {

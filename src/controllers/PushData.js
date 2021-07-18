@@ -29,10 +29,9 @@ export const checkTest = (data) => {
     }
     // console.log("======>" + JSON.stringify(data));
     return new Promise((resolve, reject) => {
-        fetch(`${process.env.REACT_APP_API_URL}/database/test/check`, {
-            method: 'POST',
-            headers: HEADER,
-            body: JSON.stringify(data),
+        fetch(`${process.env.REACT_APP_API_URL}/database/test/check?idtest=${data.IDTest}&idyear=${data.IDYear}`, {
+            method: 'GET',
+            headers: HEADER
         }).then((data) => {
             resolve(data.json());
         })
