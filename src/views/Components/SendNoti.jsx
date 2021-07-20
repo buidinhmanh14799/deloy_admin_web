@@ -76,27 +76,30 @@ export default function Notification() {
         title: values.Title,
         text: values.Content,
       }),
-    }).then((data) => {
-      console.log(data.json());
-      toast.success('Gửi thành công', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }).catch(() => {
-      toast.error('Đã xãy ra lỗi!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+    }).then(response => response.json()).then((data) => {
+      console.log(data)
+      if(data.status){
+        toast.success(data.messages, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }else{
+        toast.error(data.messages, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+     
     })
   }
   const sendVoca = () => {
@@ -107,27 +110,30 @@ export default function Notification() {
         title: 'values.Title',
         text: 'values.Content',
       }),
-    }).then(() => {
-      toast.success('Gửi thành công', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }).catch((err) => {
-      console.log('????', err + '')
-      toast.error('Đã xãy ra lỗi!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+    }).then(response => response.json()).then((data) => {
+      console.log(data)
+      if(data.status){
+        toast.success(data.messages, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }else{
+        toast.error(data.messages, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+     
     })
   }
   const onFinish = (values) => {
