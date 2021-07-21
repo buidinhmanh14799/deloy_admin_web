@@ -342,7 +342,7 @@ export default function UploadData(props) {
     console.log(dataUpdate)
     await updateFile(dataUpdate, selectUpdate)
       .then(data => {
-        updateFile(JSON.stringify({ IDYear: valueUpdate.IDYear, IDTest: valueUpdate.IDTest }), 'test')
+        updateFile(JSON.stringify({ IDYear: valueUpdate.IDYear, IDTest: valueUpdate.IDTest }), selectUpdate)
           .then(data => {
             console.log(data);
           })
@@ -490,6 +490,7 @@ export default function UploadData(props) {
   };
   // change select  
   function onChangeSelect(value) {
+    console.log(value);
     setSelectUpdate(value);
   }
   useEffect(() => {
