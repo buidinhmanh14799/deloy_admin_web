@@ -339,7 +339,6 @@ export default function UploadData(props) {
   }
   const updateData = async () => {
     let res = [];
-    console.log(dataUpdate)
     await updateFile(dataUpdate, selectUpdate)
       .then(data => {
         updateFile(JSON.stringify({ IDYear: valueUpdate.IDYear, IDTest: valueUpdate.IDTest }), selectUpdate)

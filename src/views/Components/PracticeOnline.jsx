@@ -645,13 +645,13 @@ export default function PracticeOnline(props) {
               }} >
               +
             </Button>
-            <Button type="primary" shape="circle" onClick={
+            {/* <Button type="primary" shape="circle" onClick={
               () => {
                 setNameModal('Add Data');
                 showModalJS();
               }} >
               *
-            </Button>
+            </Button> */}
           </div>
         </div>
       </CardHeader>

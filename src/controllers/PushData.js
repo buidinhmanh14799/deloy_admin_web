@@ -92,6 +92,7 @@ export const updateFile = (data, name) => {
             headers: HEADER,
             body: data,
         }).then((data) => {
+            console.log(data);
             resolve(data.json());
         })
     });
